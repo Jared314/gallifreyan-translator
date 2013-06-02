@@ -23,26 +23,35 @@ import java.util.regex.*;
 
 public class gallifreyan extends PApplet {
 
-int bg = color(255);
-int fg = color(0);
-String english = "Enter text here and press return.";
-PFont font;
+  int bg = color(255);
+  protected int getBg(){ return bg; }
+  protected void setBg(int value){ this.bg = value; }
 
-public void setup() {
-  smooth();
-  size(1024, 600);
-  background(bg);
-  font = loadFont("Futura-Medium-15.vlw");
-  fill(fg);
-  textFont(font);
-  text(english,15,30);
-  stroke(fg);
-  strokeWeight(1);
-  noFill();
-  frameRate(30);
-}
+  int fg = color(0);
+  protected int getFg(){ return fg; }
+  protected void setFg(int value){ this.fg = value; }
 
-float count=0;
+  String english = "Enter text here and press return.";
+  protected String getEnglish(){ return english; }
+
+  float count = 0;
+  float sentenceRadius = 256;
+
+// public void setup() {
+//   smooth();
+//   size(1024, 600);
+//   background(bg);
+//   PFont font = loadFont("Futura-Medium-15.vlw");
+//   fill(fg);
+//   textFont(font);
+//   text(english,15,30);
+//   stroke(fg);
+//   strokeWeight(1);
+//   noFill();
+//   frameRate(30);
+// }
+
+
 
 public void draw(){
   if(keyPressed&&keyCode==CONTROL){
@@ -95,7 +104,7 @@ public void keyPressed(){
   }
 }
 
-float sentenceRadius = 256;
+
 
 public void transliterate(){
   english=english.toLowerCase();
