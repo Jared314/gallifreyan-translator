@@ -7,4 +7,5 @@
                  [quil "1.6.0"]]
   :source-paths ["src/clj"]
   :java-source-paths ["src/java"]
+  :aot [gallifreyan-translator.window]
   :main gallifreyan-translator.core)

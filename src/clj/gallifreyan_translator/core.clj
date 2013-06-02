@@ -3,4 +3,4 @@
   (:gen-class))
 
 (defn -main []
-  (PApplet/main (into-array String ["--bgcolor=#FFFFFF" "gallifreyan_translator.base.gallifreyan"])))
+  (PApplet/main (into-array String ["--bgcolor=#FFFFFF" "gallifreyan_translator.window"])))
