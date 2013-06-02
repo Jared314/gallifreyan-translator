@@ -1,4 +1,5 @@
 (ns gallifreyan-translator.window
+  (:import [processing.core PApplet])
   (:gen-class
    :extends gallifreyan_translator.base.gallifreyan))
 
@@ -18,3 +19,12 @@
       (.strokeWeight 1)
       (.noFill)
       (.frameRate 30))))
+
+(defn -draw [this]
+  (if (and (.getKeyPressed this)
+           (= PApplet/CONTROL (.getKeyCode this)))
+    (let [english (.getEnglish this)
+          c (.getCount this)]
+      (.transliterate this english)
+      (.text this english (float 15) (float 30))
+      (.setCount this (+ c (float 0.02))))))

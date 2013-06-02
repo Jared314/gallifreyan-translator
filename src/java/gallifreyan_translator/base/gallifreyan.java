@@ -24,18 +24,25 @@ import java.util.regex.*;
 public class gallifreyan extends PApplet {
 
   int bg = color(255);
-  protected int getBg(){ return bg; }
+  protected int getBg(){ return this.bg; }
   protected void setBg(int value){ this.bg = value; }
 
   int fg = color(0);
-  protected int getFg(){ return fg; }
+  protected int getFg(){ return this.fg; }
   protected void setFg(int value){ this.fg = value; }
 
   String english = "Enter text here and press return.";
-  protected String getEnglish(){ return english; }
+  protected String getEnglish(){ return this.english; }
 
   float count = 0;
+  protected float getCount(){ return this.count; }
+  protected void setCount(float value){ this.count = value; }
   float sentenceRadius = 256;
+
+
+  protected boolean getKeyPressed(){ return this.keyPressed; }
+  protected int getKeyCode(){ return this.keyCode; }
+
 
 // public void setup() {
 //   smooth();
@@ -51,17 +58,13 @@ public class gallifreyan extends PApplet {
 //   frameRate(30);
 // }
 
-
-
-public void draw(){
-  if(keyPressed&&keyCode==CONTROL){
-    String tempEnglish=english;
-    transliterate();
-    english=tempEnglish;
-    text(english,15,30);
-    count+=0.02f;
-  }
-}
+// public void draw(){
+//   if(keyPressed&&keyCode==CONTROL){
+//     transliterate(english);
+//     text(english,15,30);
+//     count+=0.02f;
+//   }
+// }
 
 public void keyPressed(){
   if(english=="Enter text here and press return."&&keyCode!=SHIFT){
@@ -80,9 +83,7 @@ public void keyPressed(){
   }else if (keyCode==ALT){
     bg=color(random(255),random(255),random(255));
     fg=color(random(255),random(255),random(255));
-    String tempEnglish=english;
-    transliterate();
-    english=tempEnglish;
+    transliterate(english);
     text(english,15,30);
   }else if (keyCode==DELETE||keyCode==BACKSPACE){
     String oldenglish=english;
@@ -93,9 +94,7 @@ public void keyPressed(){
     background(bg);
     text(english,15,30);
   }else if (keyCode==RETURN||keyCode==ENTER){
-    String tempEnglish=english;
-    transliterate();
-    english=tempEnglish;
+    transliterate(english);
     text(english,15,30);
   }else{
     english=english+key;
@@ -106,7 +105,7 @@ public void keyPressed(){
 
 
 
-public void transliterate(){
+public void transliterate(String english){
   english=english.toLowerCase();
   english=join(split(english, " -"), "-");
   english=join(split(english, "- "), "-");
