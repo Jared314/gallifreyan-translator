@@ -4,22 +4,7 @@
 
 package gallifreyan_translator.base;
 
-import processing.core.*;
-import processing.xml.*;
-
-import java.applet.*;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.event.MouseEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.FocusEvent;
-import java.awt.Image;
-import java.io.*;
-import java.net.*;
-import java.text.*;
-import java.util.*;
-import java.util.zip.*;
-import java.util.regex.*;
+import processing.core.PApplet;
 
 public class gallifreyan extends PApplet {
 
@@ -46,68 +31,15 @@ public class gallifreyan extends PApplet {
   protected int getKeyCode(){ return this.keyCode; }
   protected char getKey(){ return this.key; }
 
-// public void setup() {
-//   smooth();
-//   size(1024, 600);
-//   background(bg);
-//   PFont font = loadFont("Futura-Medium-15.vlw");
-//   fill(fg);
-//   textFont(font);
-//   text(english,15,30);
-//   stroke(fg);
-//   strokeWeight(1);
-//   noFill();
-//   frameRate(30);
-// }
-
-// public void draw(){
-//   if(keyPressed&&keyCode==CONTROL){
-//     transliterate(english, fg, bg);
-//     text(english,15,30);
-//     count+=0.02f;
-//   }
-// }
-
-// public void keyPressed(){
-//   if(english=="Enter text here and press return."&&keyCode!=SHIFT){
-//     english=""+key;
-//     background(bg);
-//     text(english,15,30);
-//   }else if (keyCode==SHIFT){
-//   }else if (keyCode==CONTROL){
-//   }else if (keyCode==TAB){
-//     stroke(bg);
-//     strokeWeight(400);
-//     ellipse(width/2,height/2,(sentenceRadius+222)*2,(sentenceRadius+222)*2);
-//     saveFrame(english+" ####.png");
-//     text("Your image has been saved to the",15,30);
-//     text("folder that contains this program.",15,50);
-//   }else if (keyCode==ALT){
-//     bg=color(random(255),random(255),random(255));
-//     fg=color(random(255),random(255),random(255));
-//     transliterate(english, fg, bg);
-//     text(english,15,30);
-//   }else if (keyCode==DELETE||keyCode==BACKSPACE){
-//     String oldenglish=english;
-//     english="";
-//     for(int n=0;n<oldenglish.length()-1;n++){
-//       english=english+oldenglish.charAt(n);
-//     }
-//     background(bg);
-//     text(english,15,30);
-//   }else if (keyCode==RETURN||keyCode==ENTER){
-//     transliterate(english, fg, bg);
-//     text(english,15,30);
-//   }else{
-//     english=english+key;
-//     background(bg);
-//     text(english,15,30);
-//   }
-// }
+  float float1=0;
+  float float2=0;
 
 
 
-public void transliterate(String english, int fg, int bg){
+
+
+
+public void transliterate(String english, int fg, int bg, float sentenceRadius){
   english=english.toLowerCase();
   english=join(split(english, " -"), "-");
   english=join(split(english, "- "), "-");
@@ -136,10 +68,10 @@ public void transliterate(String english, int fg, int bg){
     }
   }
   if (spaces==0) {
-    writeSentence(0, english);
+    writeSentence(0, english, fg, bg, sentenceRadius);
   }
   else if (sentences==1) {
-    writeSentence(1, english);
+    writeSentence(1, english, fg, bg, sentenceRadius);
   }else{
     text("ERROR: Multiple sentences are not yet supported.",15,60);
     return;
@@ -150,7 +82,11 @@ public void transliterate(String english, int fg, int bg){
   text("Press tab to save image.",15,150);
 }
 
-public void writeSentence(int type, String english) {
+
+
+
+
+public void writeSentence(int type, String english, int fg, int bg, float sentenceRadius) {
   float[] wordRadius = {};
   float1=0;
   float2=0;
@@ -250,10 +186,10 @@ public void writeSentence(int type, String english) {
         ellipse(pX,pY,20,20);
         break;
       case '?':
-        makeDots(width/2,height/2,sentenceRadius*1.4f,2,-1.2f,0.1f);
+        makeDots(width/2,height/2,sentenceRadius*1.4f,2,-1.2f,0.1f, fg);
         break;
       case '!':
-        makeDots(width/2,height/2,sentenceRadius*1.4f,3,-1.2f,0.1f);
+        makeDots(width/2,height/2,sentenceRadius*1.4f,3,-1.2f,0.1f, fg);
         break;
       case '"':
         line(width/2+cos(pos+PApplet.parseFloat(sentence[i].length+sentence[nextIndex].length)/(2*charCount)*PI)*sentenceRadius,height/2+sin(pos+PApplet.parseFloat(sentence[i].length+sentence[nextIndex].length)/(2*charCount)*PI)*sentenceRadius,width/2+cos(pos+PApplet.parseFloat(sentence[i].length+sentence[nextIndex].length)/(2*charCount)*PI)*(sentenceRadius+20),height/2+sin(pos+PApplet.parseFloat(sentence[i].length+sentence[nextIndex].length)/(2*charCount)*PI)*(sentenceRadius+20));
@@ -430,13 +366,13 @@ public void writeSentence(int type, String english) {
         if (sentence[i][j].charAt(0)=='b'||sentence[i][j].charAt(0)=='#'||sentence[i][j].charAt(0)=='d'||sentence[i][j].charAt(0)=='f'||sentence[i][j].charAt(0)=='g'||sentence[i][j].charAt(0)=='h') {
           tempX=x[i]+cos(pos)*(wordRadius[i]-letterRadius*0.95f);
           tempY=y[i]+sin(pos)*(wordRadius[i]-letterRadius*0.95f);
-          makeArcs(tempX, tempY, x[i], y[i], wordRadius[i], letterRadius, pos-PI/sentence[i].length, pos+PI/sentence[i].length);
+          makeArcs(tempX, tempY, x[i], y[i], wordRadius[i], letterRadius, pos-PI/sentence[i].length, pos+PI/sentence[i].length, fg);
           int lines=0;
           if (sentence[i][j].charAt(0)=='#') {
-            makeDots(tempX, tempY, letterRadius, 2, pos, 1);
+            makeDots(tempX, tempY, letterRadius, 2, pos, 1, fg);
           }
           else if (sentence[i][j].charAt(0)=='d') {
-            makeDots(tempX, tempY, letterRadius, 3, pos, 1);
+            makeDots(tempX, tempY, letterRadius, 3, pos, 1, fg);
           }
           else if (sentence[i][j].charAt(0)=='f') {
             lines=3;
@@ -457,7 +393,7 @@ public void writeSentence(int type, String english) {
           if (sentence[i][j].length()>1) {
             int vowelIndex=1;
             if (sentence[i][j].charAt(1)=='@') {
-              makeArcs(tempX, tempY, x[i], y[i], wordRadius[i], letterRadius*1.3f, pos+TWO_PI, pos-TWO_PI);
+              makeArcs(tempX, tempY, x[i], y[i], wordRadius[i], letterRadius*1.3f, pos+TWO_PI, pos-TWO_PI, fg);
               vowelIndex=2;
             }
             if (sentence[i][j].length()==vowelIndex) {
@@ -507,10 +443,10 @@ public void writeSentence(int type, String english) {
           arc(x[i], y[i], wordRadius[i]*2, wordRadius[i]*2, pos-PI/sentence[i].length, pos+PI/sentence[i].length);
           int lines=0;
           if (sentence[i][j].charAt(0)=='k') {
-            makeDots(tempX, tempY, letterRadius, 2, pos, 1);
+            makeDots(tempX, tempY, letterRadius, 2, pos, 1, fg);
           }
           else if (sentence[i][j].charAt(0)=='l') {
-            makeDots(tempX, tempY, letterRadius, 3, pos, 1);
+            makeDots(tempX, tempY, letterRadius, 3, pos, 1, fg);
           }
           else if (sentence[i][j].charAt(0)=='m') {
             lines=3;
@@ -595,26 +531,26 @@ public void writeSentence(int type, String english) {
             angle1+=TWO_PI;
           }
           if (nested[i][j]) {
-            makeArcs(x[nextIndex], y[nextIndex], x[i], y[i], wordRadius[i], wordRadius[nextIndex]+20, pos-PI/sentence[i].length, pos+PI/sentence[i].length);
+            makeArcs(x[nextIndex], y[nextIndex], x[i], y[i], wordRadius[i], wordRadius[nextIndex]+20, pos-PI/sentence[i].length, pos+PI/sentence[i].length, fg);
           }
           else {
-            makeArcs(tempX, tempY, x[i], y[i], wordRadius[i], letterRadius*1.5f, pos-PI/sentence[i].length, pos+PI/sentence[i].length);
+            makeArcs(tempX, tempY, x[i], y[i], wordRadius[i], letterRadius*1.5f, pos-PI/sentence[i].length, pos+PI/sentence[i].length, fg);
           }
           int lines=0;
           if (sentence[i][j].charAt(0)=='$') {
             if (nested[i][j]) {
-              makeDots(x[nextIndex], y[nextIndex], (wordRadius[nextIndex]*1.4f)+14, 2, angle1, wordRadius[nextIndex]/500);
+              makeDots(x[nextIndex], y[nextIndex], (wordRadius[nextIndex]*1.4f)+14, 2, angle1, wordRadius[nextIndex]/500, fg);
             }
             else {
-              makeDots(tempX, tempY, letterRadius*2.6f, 2, pos, 0.5f);
+              makeDots(tempX, tempY, letterRadius*2.6f, 2, pos, 0.5f, fg);
             }
           }
           else if (sentence[i][j].charAt(0)=='r') {
             if (nested[i][j]) {
-              makeDots(x[nextIndex], y[nextIndex], (wordRadius[nextIndex]*1.4f)+14, 3, angle1, wordRadius[nextIndex]/500);
+              makeDots(x[nextIndex], y[nextIndex], (wordRadius[nextIndex]*1.4f)+14, 3, angle1, wordRadius[nextIndex]/500, fg);
             }
             else {
-              makeDots(tempX, tempY, letterRadius*2.6f, 3, pos, 0.5f);
+              makeDots(tempX, tempY, letterRadius*2.6f, 3, pos, 0.5f, fg);
             }
           }
           else if (sentence[i][j].charAt(0)=='s') {
@@ -647,10 +583,10 @@ public void writeSentence(int type, String english) {
           if (sentence[i][j].length()>1) {
             if (sentence[i][j].charAt(1)=='@') {
               if (nested[i][j]) {
-                makeArcs(x[nextIndex], y[nextIndex], x[i], y[i], wordRadius[i], (wordRadius[nextIndex]+20)*1.2f, pos+TWO_PI, pos-TWO_PI);
+                makeArcs(x[nextIndex], y[nextIndex], x[i], y[i], wordRadius[i], (wordRadius[nextIndex]+20)*1.2f, pos+TWO_PI, pos-TWO_PI, fg);
               }
               else {
-                makeArcs(tempX, tempY, x[i], y[i], wordRadius[i], letterRadius*1.8f, pos+TWO_PI, pos-TWO_PI);
+                makeArcs(tempX, tempY, x[i], y[i], wordRadius[i], letterRadius*1.8f, pos+TWO_PI, pos-TWO_PI, fg);
               }
             }
           }
@@ -662,10 +598,10 @@ public void writeSentence(int type, String english) {
           arc(x[i], y[i], wordRadius[i]*2, wordRadius[i]*2, pos-PI/sentence[i].length, pos+PI/sentence[i].length);
           int lines=0;
           if (sentence[i][j].charAt(0)=='y') {
-            makeDots(tempX, tempY, letterRadius, 2, pos, 1);
+            makeDots(tempX, tempY, letterRadius, 2, pos, 1, fg);
           }
           else if (sentence[i][j].charAt(0)=='z') {
-            makeDots(tempX, tempY, letterRadius, 3, pos, 1);
+            makeDots(tempX, tempY, letterRadius, 3, pos, 1, fg);
           }
           else if (sentence[i][j].charAt(0)=='&') {
             lines=3;
@@ -834,7 +770,7 @@ public void writeSentence(int type, String english) {
   }
 }
 
-public void makeDots(float mX, float mY, float r, int amnt, float pos, float scaleFactor) {
+public void makeDots(float mX, float mY, float r, int amnt, float pos, float scaleFactor, int fg) {
   noStroke();
   fill(fg);
   if (amnt==3) {
@@ -846,10 +782,8 @@ public void makeDots(float mX, float mY, float r, int amnt, float pos, float sca
   stroke(fg);
 }
 
-float float1=0;
-float float2=0;
 
-public void makeArcs(float mX, float mY, float nX, float nY, float r1, float r2, float begin, float end) {
+public void makeArcs(float mX, float mY, float nX, float nY, float r1, float r2, float begin, float end, int fg) {
   float theta;
   float omega=0;
   float d = dist(mX, mY, nX, nY);
