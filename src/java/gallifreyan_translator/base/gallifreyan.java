@@ -33,16 +33,18 @@ public class gallifreyan extends PApplet {
 
   String english = "Enter text here and press return.";
   protected String getEnglish(){ return this.english; }
+  protected void setEnglish(String value){ this.english = value; }
 
   float count = 0;
   protected float getCount(){ return this.count; }
   protected void setCount(float value){ this.count = value; }
-  float sentenceRadius = 256;
 
+  float sentenceRadius = 256;
+  protected float getSentenceRadius(){ return this.sentenceRadius; }
 
   protected boolean getKeyPressed(){ return this.keyPressed; }
   protected int getKeyCode(){ return this.keyCode; }
-
+  protected char getKey(){ return this.key; }
 
 // public void setup() {
 //   smooth();
@@ -60,52 +62,52 @@ public class gallifreyan extends PApplet {
 
 // public void draw(){
 //   if(keyPressed&&keyCode==CONTROL){
-//     transliterate(english);
+//     transliterate(english, fg, bg);
 //     text(english,15,30);
 //     count+=0.02f;
 //   }
 // }
 
-public void keyPressed(){
-  if(english=="Enter text here and press return."&&keyCode!=SHIFT){
-    english=""+key;
-    background(bg);
-    text(english,15,30);
-  }else if (keyCode==SHIFT){
-  }else if (keyCode==CONTROL){
-  }else if (keyCode==TAB){
-    stroke(bg);
-    strokeWeight(400);
-    ellipse(width/2,height/2,(sentenceRadius+222)*2,(sentenceRadius+222)*2);
-    saveFrame(english+" ####.png");
-    text("Your image has been saved to the",15,30);
-    text("folder that contains this program.",15,50);
-  }else if (keyCode==ALT){
-    bg=color(random(255),random(255),random(255));
-    fg=color(random(255),random(255),random(255));
-    transliterate(english);
-    text(english,15,30);
-  }else if (keyCode==DELETE||keyCode==BACKSPACE){
-    String oldenglish=english;
-    english="";
-    for(int n=0;n<oldenglish.length()-1;n++){
-      english=english+oldenglish.charAt(n);
-    }
-    background(bg);
-    text(english,15,30);
-  }else if (keyCode==RETURN||keyCode==ENTER){
-    transliterate(english);
-    text(english,15,30);
-  }else{
-    english=english+key;
-    background(bg);
-    text(english,15,30);
-  }
-}
+// public void keyPressed(){
+//   if(english=="Enter text here and press return."&&keyCode!=SHIFT){
+//     english=""+key;
+//     background(bg);
+//     text(english,15,30);
+//   }else if (keyCode==SHIFT){
+//   }else if (keyCode==CONTROL){
+//   }else if (keyCode==TAB){
+//     stroke(bg);
+//     strokeWeight(400);
+//     ellipse(width/2,height/2,(sentenceRadius+222)*2,(sentenceRadius+222)*2);
+//     saveFrame(english+" ####.png");
+//     text("Your image has been saved to the",15,30);
+//     text("folder that contains this program.",15,50);
+//   }else if (keyCode==ALT){
+//     bg=color(random(255),random(255),random(255));
+//     fg=color(random(255),random(255),random(255));
+//     transliterate(english, fg, bg);
+//     text(english,15,30);
+//   }else if (keyCode==DELETE||keyCode==BACKSPACE){
+//     String oldenglish=english;
+//     english="";
+//     for(int n=0;n<oldenglish.length()-1;n++){
+//       english=english+oldenglish.charAt(n);
+//     }
+//     background(bg);
+//     text(english,15,30);
+//   }else if (keyCode==RETURN||keyCode==ENTER){
+//     transliterate(english, fg, bg);
+//     text(english,15,30);
+//   }else{
+//     english=english+key;
+//     background(bg);
+//     text(english,15,30);
+//   }
+// }
 
 
 
-public void transliterate(String english){
+public void transliterate(String english, int fg, int bg){
   english=english.toLowerCase();
   english=join(split(english, " -"), "-");
   english=join(split(english, "- "), "-");
@@ -134,10 +136,10 @@ public void transliterate(String english){
     }
   }
   if (spaces==0) {
-    writeSentence(0);
+    writeSentence(0, english);
   }
   else if (sentences==1) {
-    writeSentence(1);
+    writeSentence(1, english);
   }else{
     text("ERROR: Multiple sentences are not yet supported.",15,60);
     return;
@@ -148,7 +150,7 @@ public void transliterate(String english){
   text("Press tab to save image.",15,150);
 }
 
-public void writeSentence(int type) {
+public void writeSentence(int type, String english) {
   float[] wordRadius = {};
   float1=0;
   float2=0;
