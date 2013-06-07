@@ -6,12 +6,12 @@ package gallifreyan_translator.base;
 
 import processing.core.PApplet;
 
-public class gallifreyan extends PApplet {
+public class gallifreyan {
 
-  protected boolean getKeyPressed(){ return this.keyPressed; }
-  protected int getKeyCode(){ return this.keyCode; }
-  protected char getKey(){ return this.key; }
-
+  // This function exists because there is both a keyPressed field and method in
+  // the PApplet object and clojure, when calling it, chooses the method over the field,
+  // rendering the field inaccessible from clojure.
+  public static boolean getKeyPressed(PApplet applet){ return applet.keyPressed; }
 
   public static class ArcPoint {
     public final float float1;
@@ -23,18 +23,16 @@ public class gallifreyan extends PApplet {
   }
 
 
-
-
   public static void transliterate(PApplet applet, String english, int fg, int bg, float sentenceRadius, int count){
     english=english.toLowerCase();
-    english=join(split(english, " -"), "-");
-    english=join(split(english, "- "), "-");
-    english=join(split(english, "-"), "- ");
-    english=join(split(english, "ch"), "#");
-    english=join(split(english, "sh"), "$");
-    english=join(split(english, "th"), "%");
-    english=join(split(english, "ng"), "&");
-    english=join(split(english, "qu"), "q");
+    english=applet.join(applet.split(english, " -"), "-");
+    english=applet.join(applet.split(english, "- "), "-");
+    english=applet.join(applet.split(english, "-"), "- ");
+    english=applet.join(applet.split(english, "ch"), "#");
+    english=applet.join(applet.split(english, "sh"), "$");
+    english=applet.join(applet.split(english, "th"), "%");
+    english=applet.join(applet.split(english, "ng"), "&");
+    english=applet.join(applet.split(english, "qu"), "q");
 
     applet.background(bg);
     int spaces=0;
@@ -92,14 +90,14 @@ public class gallifreyan extends PApplet {
     String Word = "";
     String[] Sentence = {};
 
-    Sentence = split(english, " ");
+    Sentence = applet.split(english, " ");
     String[][] sentence = new String[Sentence.length][];
     char[] punctuation = new char[Sentence.length];
     boolean[][] apostrophes = new boolean[Sentence.length][100];
     for (int j=0;j<Sentence.length;j++) {
       String[] word= {
       };
-      Sentence[j]=join(split(Sentence[j], " "), "");
+      Sentence[j]=applet.join(applet.split(Sentence[j], " "), "");
       boolean vowel=true;
       for (int i=0;i<Sentence[j].length();i++) {
         if (i!=0) {
@@ -110,7 +108,7 @@ public class gallifreyan extends PApplet {
         }
         if (Sentence[j].charAt(i)=='a'||Sentence[j].charAt(i)=='e'||Sentence[j].charAt(i)=='i'||Sentence[j].charAt(i)=='o'||Sentence[j].charAt(i)=='u') {
           if (vowel) {
-            word=append(word, str(Sentence[j].charAt(i)));
+            word=applet.append(word, applet.str(Sentence[j].charAt(i)));
           }
           else {
             word[word.length-1]=word[word.length-1]+Sentence[j].charAt(i);
@@ -125,7 +123,7 @@ public class gallifreyan extends PApplet {
           }
         }
         else {
-          word=append(word, str(Sentence[j].charAt(i)));
+          word=applet.append(word, applet.str(Sentence[j].charAt(i)));
           if (Sentence[j].charAt(i)=='t'||Sentence[j].charAt(i)=='$'||Sentence[j].charAt(i)=='r'||Sentence[j].charAt(i)=='s'||Sentence[j].charAt(i)=='v'||Sentence[j].charAt(i)=='w') {
             vowel=true;
           }
@@ -163,8 +161,8 @@ public class gallifreyan extends PApplet {
     applet.stroke(fg);
 
     for (int i=0;i<sentence.length;i++) {
-      x=append(x, applet.width/2+distance*applet.cos(pos));
-      y=append(y, applet.height/2+distance*applet.sin(pos));
+      x=applet.append(x, applet.width/2+distance*applet.cos(pos));
+      y=applet.append(y, applet.height/2+distance*applet.sin(pos));
       int nextIndex=0;
       if (i!=sentence.length-1) {
         nextIndex=i+1;
@@ -186,7 +184,7 @@ public class gallifreyan extends PApplet {
         applet.line(applet.width/2+applet.cos(pos+PApplet.parseFloat(sentence[i].length+sentence[nextIndex].length)/(2*charCount)*PI)*sentenceRadius,applet.height/2+applet.sin(pos+PApplet.parseFloat(sentence[i].length+sentence[nextIndex].length)/(2*charCount)*PI)*sentenceRadius,applet.width/2+applet.cos(pos+PApplet.parseFloat(sentence[i].length+sentence[nextIndex].length)/(2*charCount)*PI)*(sentenceRadius+20),applet.height/2+applet.sin(pos+PApplet.parseFloat(sentence[i].length+sentence[nextIndex].length)/(2*charCount)*PI)*(sentenceRadius+20));
         break;
         case '-':
-        applet.line(applet.width/2+applet.cos(pos+PApplet.parseFloat(sentence[i].length+sentence[nextIndex].length)/(2*charCount)*PI)*sentenceRadius,applet.height/2+sin(pos+PApplet.parseFloat(sentence[i].length+sentence[nextIndex].length)/(2*charCount)*PI)*sentenceRadius,applet.width/2+cos(pos+PApplet.parseFloat(sentence[i].length+sentence[nextIndex].length)/(2*charCount)*PI)*(sentenceRadius+20),applet.height/2+applet.sin(pos+PApplet.parseFloat(sentence[i].length+sentence[nextIndex].length)/(2*charCount)*PI)*(sentenceRadius+20));
+        applet.line(applet.width/2+applet.cos(pos+PApplet.parseFloat(sentence[i].length+sentence[nextIndex].length)/(2*charCount)*PI)*sentenceRadius,applet.height/2+applet.sin(pos+PApplet.parseFloat(sentence[i].length+sentence[nextIndex].length)/(2*charCount)*PI)*sentenceRadius,applet.width/2+applet.cos(pos+PApplet.parseFloat(sentence[i].length+sentence[nextIndex].length)/(2*charCount)*PI)*(sentenceRadius+20),applet.height/2+applet.sin(pos+PApplet.parseFloat(sentence[i].length+sentence[nextIndex].length)/(2*charCount)*PI)*(sentenceRadius+20));
         applet.line(applet.width/2+applet.cos(pos+(sentence[i].length+sentence[nextIndex].length+0.3f)/(2*charCount)*PI)*sentenceRadius,applet.height/2+applet.sin(pos+(sentence[i].length+sentence[nextIndex].length+0.2f)/(2*charCount)*PI)*sentenceRadius,applet.width/2+applet.cos(pos+(sentence[i].length+sentence[nextIndex].length+0.2f)/(2*charCount)*PI)*(sentenceRadius+20),applet.height/2+applet.sin(pos+(sentence[i].length+sentence[nextIndex].length+0.3f)/(2*charCount)*PI)*(sentenceRadius+20));
         applet.line(applet.width/2+applet.cos(pos+(sentence[i].length+sentence[nextIndex].length-0.3f)/(2*charCount)*PI)*sentenceRadius,applet.height/2+applet.sin(pos+(sentence[i].length+sentence[nextIndex].length-0.2f)/(2*charCount)*PI)*sentenceRadius,applet.width/2+applet.cos(pos+(sentence[i].length+sentence[nextIndex].length-0.2f)/(2*charCount)*PI)*(sentenceRadius+20),applet.height/2+applet.sin(pos+(sentence[i].length+sentence[nextIndex].length-0.3f)/(2*charCount)*PI)*(sentenceRadius+20));
         break;
@@ -616,8 +614,8 @@ public class gallifreyan extends PApplet {
                 continue;
               }
               if (sentence[i][j].charAt(vowelIndex)=='a') {
-                tempX=x[i]+cos(pos)*(wordRadius[i]+letterRadius/2);
-                tempY=y[i]+sin(pos)*(wordRadius[i]+letterRadius/2);
+                tempX=x[i]+applet.cos(pos)*(wordRadius[i]+letterRadius/2);
+                tempY=y[i]+applet.sin(pos)*(wordRadius[i]+letterRadius/2);
                 applet.ellipse(tempX, tempY, letterRadius, letterRadius);
               }
               else if (sentence[i][j].charAt(vowelIndex)=='e') {
@@ -721,7 +719,7 @@ public class gallifreyan extends PApplet {
         if(applet.keyPressed&&applet.keyCode==PApplet.CONTROL){
           r=0;
         }else{
-          r=floor(applet.random(indexes.length));
+          r=applet.floor(applet.random(indexes.length));
         }
         int j=indexes[r];
         float a=angles[r]+PI;
@@ -752,13 +750,14 @@ public class gallifreyan extends PApplet {
   }
 
   public static void makeDots(PApplet applet, float mX, float mY, float r, int amnt, float pos, float scaleFactor, int fg) {
+    final float PI = applet.PI;
     applet.noStroke();
     applet.fill(fg);
     if (amnt==3) {
-      applet.ellipse(mX+cos(pos+PI)*r/1.4f, mY+sin(pos+PI)*r/1.4f, r/3*scaleFactor, r/3*scaleFactor);
+      applet.ellipse(mX+applet.cos(pos+PI)*r/1.4f, mY+applet.sin(pos+PI)*r/1.4f, r/3*scaleFactor, r/3*scaleFactor);
     }
-    applet.ellipse(mX+cos(pos+PI+scaleFactor)*r/1.4f, mY+sin(pos+PI+scaleFactor)*r/1.4f, r/3*scaleFactor, r/3*scaleFactor);
-    applet.ellipse(mX+cos(pos+PI-scaleFactor)*r/1.4f, mY+sin(pos+PI-scaleFactor)*r/1.4f, r/3*scaleFactor, r/3*scaleFactor);
+    applet.ellipse(mX+applet.cos(pos+PI+scaleFactor)*r/1.4f, mY+applet.sin(pos+PI+scaleFactor)*r/1.4f, r/3*scaleFactor, r/3*scaleFactor);
+    applet.ellipse(mX+applet.cos(pos+PI-scaleFactor)*r/1.4f, mY+applet.sin(pos+PI-scaleFactor)*r/1.4f, r/3*scaleFactor, r/3*scaleFactor);
     applet.noFill();
     applet.stroke(fg);
   }

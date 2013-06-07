@@ -2,7 +2,7 @@
   (:import [processing.core PApplet]
            [gallifreyan_translator.base gallifreyan])
   (:gen-class
-   :extends gallifreyan_translator.base.gallifreyan
+   :extends processing.core.PApplet
    :exposes-methods {keyPressed parentKeyPressed}
    :init init2
    :post-init postinit
@@ -42,8 +42,8 @@
       (.frameRate 30))))
 
 (defn -draw [this]
-  (if (and (.getKeyPressed this)
-           (= PApplet/CONTROL (.getKeyCode this)))
+  (if (and (gallifreyan/getKeyPressed this)
+           (= PApplet/CONTROL (.keyCode this)))
     (let [s (.state this)
           {english :text
            c :count
@@ -52,15 +52,13 @@
            sr :sentenceRadius} @s]
       (gallifreyan/transliterate this english fg bg sr c)
       (.text this english (float 15) (float 30))
-      (dosync (alter s assoc :count (+ c (float 0.02))))
-      ;(.setCount this (+ c (float 0.02)))
-      )))
+      (dosync (alter s assoc :count (+ c (float 0.02)))))))
 
 (defn -keyPressed
   ([this keyevent] (.parentKeyPressed this keyevent))
   ([this]
-   (let [keycode (.getKeyCode this)
-         newkey (.getKey this)
+   (let [keycode (.keyCode this)
+         newkey (.key this)
          s (.state this)
          {e :text
           fg :fg
