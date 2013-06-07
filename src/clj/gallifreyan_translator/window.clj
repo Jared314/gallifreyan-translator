@@ -1,5 +1,6 @@
 (ns gallifreyan-translator.window
-  (:import [processing.core PApplet])
+  (:import [processing.core PApplet]
+           [gallifreyan_translator.base gallifreyan])
   (:gen-class
    :extends gallifreyan_translator.base.gallifreyan
    :exposes-methods {keyPressed parentKeyPressed}))
@@ -30,7 +31,7 @@
           c (.getCount this)
           bg (.getBg this)
           fg (.getFg this)]
-      (.transliterate this english fg bg (.getSentenceRadius this))
+      (gallifreyan/transliterate this english fg bg (.getSentenceRadius this) c)
       (.text this english (float 15) (float 30))
       (.setCount this (+ c (float 0.02))))))
 
@@ -62,7 +63,7 @@
       (doto this
         (.setBg (.color this (.random this 255) (.random this 255) (.random this 255)))
         (.setFg (.color this (.random this 255) (.random this 255) (.random this 255)))
-        (.transliterate e (.getFg this) (.getBg this) (.getSentenceRadius this))
+        (gallifreyan/transliterate e (.getFg this) (.getBg this) (.getSentenceRadius this) (.getCount this))
         (.text e (float 15) (float 30)))
 
       (or (= (int PApplet/DELETE) keycode)
@@ -75,7 +76,7 @@
       (or (= (int PApplet/RETURN) keycode)
           (= (int PApplet/ENTER) keycode))
       (doto this
-        (.transliterate e fg bg (.getSentenceRadius this))
+        (gallifreyan/transliterate e fg bg (.getSentenceRadius this) (.getCount this))
         (.text e (float 15) (float 30)))
 
       :else
