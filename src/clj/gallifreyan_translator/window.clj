@@ -12,7 +12,7 @@
 (def defaultState {:text "Enter text here and press return."
                    :bg 0
                    :fg 0
-                   :count 0
+                   :count (float 0)
                    :sentenceRadius 256})
 
 (defn -init2 []
@@ -46,7 +46,7 @@
            (= PApplet/CONTROL (.keyCode this)))
     (let [s (.state this)
           {^String english :text
-           c :count
+           ^float c :count
            bg :bg
            fg :fg
            sr :sentenceRadius} @s]
@@ -64,7 +64,7 @@
           fg :fg
           ^int bg :bg
           sr :sentenceRadius
-          c :count} @s]
+          ^float c :count} @s]
      (cond
       (= PApplet/SHIFT keycode) nil
       (= PApplet/CONTROL keycode) nil

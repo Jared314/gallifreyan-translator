@@ -23,7 +23,7 @@ public class gallifreyan {
   }
 
 
-  public static void transliterate(PApplet applet, String english, int fg, int bg, float sentenceRadius, int count){
+  public static void transliterate(PApplet applet, String english, int fg, int bg, float sentenceRadius, float count){
     english=english.toLowerCase();
     english=applet.join(applet.split(english, " -"), "-");
     english=applet.join(applet.split(english, "- "), "-");
@@ -71,7 +71,7 @@ public class gallifreyan {
 
 
 
-  public static void writeSentence(PApplet applet, int type, String english, int fg, int bg, float sentenceRadius, int count) {
+  public static void writeSentence(PApplet applet, int type, String english, int fg, int bg, float sentenceRadius, float count) {
 
     final float PI = applet.PI;
     final float TWO_PI = applet.TWO_PI;
@@ -697,7 +697,6 @@ public class gallifreyan {
       }
       if (indexes.length==0) {
         float a;
-        //Note
         if(applet.keyPressed&&applet.keyCode==PApplet.CONTROL){
           a=applet.map(applet.noise(count+i*5),0,1,arcBegin[i], arcEnd[i]);
         }else{
@@ -715,7 +714,6 @@ public class gallifreyan {
       }
       else {
         int r;
-        //Note
         if(applet.keyPressed&&applet.keyCode==PApplet.CONTROL){
           r=0;
         }else{
