@@ -8,25 +8,6 @@ import processing.core.PApplet;
 
 public class gallifreyan extends PApplet {
 
-  int bg = color(255);
-  protected int getBg(){ return this.bg; }
-  protected void setBg(int value){ this.bg = value; }
-
-  int fg = color(0);
-  protected int getFg(){ return this.fg; }
-  protected void setFg(int value){ this.fg = value; }
-
-  String english = "Enter text here and press return.";
-  protected String getEnglish(){ return this.english; }
-  protected void setEnglish(String value){ this.english = value; }
-
-  float count = 0;
-  protected float getCount(){ return this.count; }
-  protected void setCount(float value){ this.count = value; }
-
-  float sentenceRadius = 256;
-  protected float getSentenceRadius(){ return this.sentenceRadius; }
-
   protected boolean getKeyPressed(){ return this.keyPressed; }
   protected int getKeyCode(){ return this.keyCode; }
   protected char getKey(){ return this.key; }

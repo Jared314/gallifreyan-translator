@@ -3,14 +3,31 @@
            [gallifreyan_translator.base gallifreyan])
   (:gen-class
    :extends gallifreyan_translator.base.gallifreyan
-   :exposes-methods {keyPressed parentKeyPressed}))
+   :exposes-methods {keyPressed parentKeyPressed}
+   :init init2
+   :post-init postinit
+   :state state))
 
 (def defaultEnglish "Enter text here and press return.")
+(def defaultState {:text "Enter text here and press return."
+                   :bg 0
+                   :fg 0
+                   :count 0
+                   :sentenceRadius 256})
+
+(defn -init2 []
+  [[] (ref defaultState)])
+
+(defn -postinit [this]
+  (let [bg (.color this 255)
+        fg (.color this 0)
+        s (.state this)]
+    (dosync (alter s assoc :bg bg :fg fg))))
 
 (defn -setup [this]
-  (let [fg (.getFg this)
-        bg (.getBg this)
-        english (.getEnglish this)
+  (let [{fg :fg
+         bg :bg
+         english :text} @(.state this)
         font (.loadFont this "Futura-Medium-15.vlw")]
     (doto this
       (.smooth)
@@ -27,22 +44,29 @@
 (defn -draw [this]
   (if (and (.getKeyPressed this)
            (= PApplet/CONTROL (.getKeyCode this)))
-    (let [english (.getEnglish this)
-          c (.getCount this)
-          bg (.getBg this)
-          fg (.getFg this)]
-      (gallifreyan/transliterate this english fg bg (.getSentenceRadius this) c)
+    (let [s (.state this)
+          {english :text
+           c :count
+           bg :bg
+           fg :fg
+           sr :sentenceRadius} @s]
+      (gallifreyan/transliterate this english fg bg sr c)
       (.text this english (float 15) (float 30))
-      (.setCount this (+ c (float 0.02))))))
+      (dosync (alter s assoc :count (+ c (float 0.02))))
+      ;(.setCount this (+ c (float 0.02)))
+      )))
 
 (defn -keyPressed
   ([this keyevent] (.parentKeyPressed this keyevent))
   ([this]
    (let [keycode (.getKeyCode this)
          newkey (.getKey this)
-         e (.getEnglish this)
-         fg (.getFg this)
-         bg (.getBg this)]
+         s (.state this)
+         {e :text
+          fg :fg
+          bg :bg
+          sr :sentenceRadius
+          c :count} @s]
      (cond
       (= PApplet/SHIFT keycode) nil
       (= PApplet/CONTROL keycode) nil
@@ -53,36 +77,37 @@
         (.strokeWeight 400)
         (.ellipse (/ (.getWidth this) 2)
                   (/ (.getHeight this) 2)
-                  (* (+ (.getSentenceRadius this) 222) 2)
-                  (* (+ (.getSentenceRadius this) 222) 2))
+                  (* (+ sr 222) 2)
+                  (* (+ sr 222) 2))
         (.saveFrame (str e " ####.png"))
         (.text "Your image has been saved to the" (float 15) (float 30))
         (.text "folder that contains this program." (float 15) (float 50)))
 
       (= PApplet/ALT keycode)
-      (doto this
-        (.setBg (.color this (.random this 255) (.random this 255) (.random this 255)))
-        (.setFg (.color this (.random this 255) (.random this 255) (.random this 255)))
-        (gallifreyan/transliterate e (.getFg this) (.getBg this) (.getSentenceRadius this) (.getCount this))
-        (.text e (float 15) (float 30)))
+      (let [newbg (.color this (.random this 255) (.random this 255) (.random this 255))
+            newfg (.color this (.random this 255) (.random this 255) (.random this 255))]
+        (gallifreyan/transliterate this e newfg newbg sr c)
+        (.text this e (float 15) (float 30))
+        (dosync (alter s assoc :bg newbg :fg newfg)))
 
       (or (= (int PApplet/DELETE) keycode)
           (= (int PApplet/BACKSPACE) keycode))
-      (doto this
-        (.setEnglish (subs e 0 (dec (count e))))
-        (.background (.getBg this))
-        (.text (.getEnglish this) (float 15) (float 30)))
+      (let [newe (subs e 0 (dec (count e)))]
+        (.background this bg)
+        (.text this newe (float 15) (float 30))
+        (dosync (alter s assoc :text newe)))
 
       (or (= (int PApplet/RETURN) keycode)
           (= (int PApplet/ENTER) keycode))
       (doto this
-        (gallifreyan/transliterate e fg bg (.getSentenceRadius this) (.getCount this))
+        (gallifreyan/transliterate e fg bg sr c)
         (.text e (float 15) (float 30)))
 
       :else
       (let [prefix (if (= defaultEnglish e) "" e)
             newe (str prefix newkey)]
         (doto this
-          (.setEnglish newe)
           (.background bg)
-          (.text newe (float 15) (float 30))))))))
+          (.text newe (float 15) (float 30))
+          (dosync (alter s assoc :text newe))))))))
+
