@@ -92,7 +92,7 @@
 
       (or (= (int PApplet/DELETE) keycode)
           (= (int PApplet/BACKSPACE) keycode))
-      (let [newe (subs e 0 (dec (count e)))]
+      (let [newe (if (empty? e) e (subs e 0 (dec (count e))))]
         (.background this bg)
         (.text this newe (float 15) (float 30))
         (dosync (alter s assoc :text newe)))
