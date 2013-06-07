@@ -18,16 +18,16 @@
 (defn -init2 []
   [[] (ref defaultState)])
 
-(defn -postinit [this]
+(defn -postinit [^gallifreyan_translator.window this]
   (let [bg (.color this 255)
         fg (.color this 0)
         s (.state this)]
     (dosync (alter s assoc :bg bg :fg fg))))
 
-(defn -setup [this]
-  (let [{fg :fg
-         bg :bg
-         english :text} @(.state this)
+(defn -setup [^gallifreyan_translator.window this]
+  (let [{^int fg :fg
+         ^int bg :bg
+         ^String english :text} @(.state this)
         font (.loadFont this "Futura-Medium-15.vlw")]
     (doto this
       (.smooth)
@@ -41,11 +41,11 @@
       (.noFill)
       (.frameRate 30))))
 
-(defn -draw [this]
+(defn -draw [^gallifreyan_translator.window this]
   (if (and (gallifreyan/getKeyPressed this)
            (= PApplet/CONTROL (.keyCode this)))
     (let [s (.state this)
-          {english :text
+          {^String english :text
            c :count
            bg :bg
            fg :fg
@@ -55,14 +55,14 @@
       (dosync (alter s assoc :count (+ c (float 0.02)))))))
 
 (defn -keyPressed
-  ([this keyevent] (.parentKeyPressed this keyevent))
-  ([this]
+  ([^gallifreyan_translator.window this keyevent] (.parentKeyPressed this keyevent))
+  ([^gallifreyan_translator.window this]
    (let [keycode (.keyCode this)
          newkey (.key this)
          s (.state this)
-         {e :text
+         {^String e :text
           fg :fg
-          bg :bg
+          ^int bg :bg
           sr :sentenceRadius
           c :count} @s]
      (cond
