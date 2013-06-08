@@ -23,53 +23,52 @@ public class gallifreyan {
   }
 
 
-  public static void transliterate(PApplet applet, String english, int fg, int bg, float sentenceRadius, float count){
-    english=english.toLowerCase();
-    english=applet.join(applet.split(english, " -"), "-");
-    english=applet.join(applet.split(english, "- "), "-");
-    english=applet.join(applet.split(english, "-"), "- ");
-    english=applet.join(applet.split(english, "ch"), "#");
-    english=applet.join(applet.split(english, "sh"), "$");
-    english=applet.join(applet.split(english, "th"), "%");
-    english=applet.join(applet.split(english, "ng"), "&");
-    english=applet.join(applet.split(english, "qu"), "q");
 
-    applet.background(bg);
-    int spaces=0;
-    int sentences=1;
-    for (int i=0;i<english.length();i++) {
-
-      if (english.charAt(i)=='c') {
-        applet.text("ERROR: Please replace every C with a K or an S.",15,60);
-        return;
-      }
-      if (english.charAt(i)==' ') {
-        spaces++;
-      }
-      if ((english.charAt(i)=='.'||english.charAt(i)=='!'||english.charAt(i)=='?')&&i<english.length()-1) {
-        if (english.charAt(i+1)==' ') {
-          sentences++;
-        }
-      }
-    }
-    if(english.length() > 0){
-      if (spaces==0) {
-        writeSentence(applet, 0, english, fg, bg, sentenceRadius, count);
-      }
-      else if (sentences==1) {
-        writeSentence(applet, 1, english, fg, bg, sentenceRadius, count);
-      }else{
-        applet.text("ERROR: Multiple sentences are not yet supported.",15,60);
-        return;
-      }
-    }
+  public static String transliterate(String english){
+    //TODO: Replace. Adapted from existing code.
+    return english
+      .trim()
+      .toLowerCase()
+      .replace(" -", "-")
+      .replace("- ", "-")
+      .replace("-", "- ")
+      .replace("ch", "#")
+      .replace("sh", "$")
+      .replace("th", "%")
+      .replace("ng", "&")
+      .replace("qu", "q");
   }
 
 
 
+  private static int sentenceCount(String text){
+    int spaces = 0;
+    int sentences = 1;
+
+    for (int i = 0; i < text.length(); i++) {
+      char c = text.charAt(i);
+      boolean isNotEnd = i < text.length() - 1;
+
+      if (c == ' ') spaces++;
+
+      if (isNotEnd
+          && (c == '.' || c == '!' ||c == '?')
+          && text.charAt(i + 1) == ' ')
+      {
+        sentences++;
+      }
+    }
+
+    return (spaces == 0) ? 0 : sentences;
+  }
 
 
-  public static void writeSentence(PApplet applet, int type, String english, int fg, int bg, float sentenceRadius, float count) {
+
+  public static void draw(PApplet applet, String english, int fg, int bg, float sentenceRadius, float count){
+
+    if(english.length() < 1) return;
+
+    int type = sentenceCount(english);
 
     final float PI = applet.PI;
     final float TWO_PI = applet.TWO_PI;

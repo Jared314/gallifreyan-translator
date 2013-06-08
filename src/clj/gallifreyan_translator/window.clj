@@ -49,9 +49,10 @@
          fg :fg
          bg :bg
          sr :sentenceRadius
-         ^float c :count} @s]
+         ^float c :count} @s
+        ttext (gallifreyan/transliterate labeltext)]
     (.background this bg)
-    (gallifreyan/transliterate this labeltext fg bg sr c)
+    (gallifreyan/draw this ttext fg bg sr c)
     (.text this labeltext (float 15) (float 30))
     ; Add jitter for animated lines in the next frame
     ;(dosync (alter s assoc :count (+ c (float 0.02))))
