@@ -52,19 +52,17 @@ public class gallifreyan {
         }
       }
     }
-    if (spaces==0) {
-      writeSentence(applet, 0, english, fg, bg, sentenceRadius, count);
+    if(english.length() > 0){
+      if (spaces==0) {
+        writeSentence(applet, 0, english, fg, bg, sentenceRadius, count);
+      }
+      else if (sentences==1) {
+        writeSentence(applet, 1, english, fg, bg, sentenceRadius, count);
+      }else{
+        applet.text("ERROR: Multiple sentences are not yet supported.",15,60);
+        return;
+      }
     }
-    else if (sentences==1) {
-      writeSentence(applet, 1, english, fg, bg, sentenceRadius, count);
-    }else{
-      applet.text("ERROR: Multiple sentences are not yet supported.",15,60);
-      return;
-    }
-    applet.text("Press return again for another version.",15,60);
-    applet.text("Hold control to animate.",15,120);
-    applet.text("Press alt to randomize colors.",15,90);
-    applet.text("Press tab to save image.",15,150);
   }
 
 
@@ -80,7 +78,7 @@ public class gallifreyan {
     ArcPoint ap = new ArcPoint(0,0);
 
     float charCount=0;
-    if(english.charAt(english.length()-1)==' '){
+    if(english.length() > 1 && english.charAt(english.length()-1)==' '){
       String oldenglish=english;
       english="";
       for(int n=0;n<oldenglish.length()-1;n++){
@@ -697,11 +695,11 @@ public class gallifreyan {
       }
       if (indexes.length==0) {
         float a;
-        if(applet.keyPressed&&applet.keyCode==PApplet.CONTROL){
-          a=applet.map(applet.noise(count+i*5),0,1,arcBegin[i], arcEnd[i]);
-        }else{
+//        if(applet.keyPressed&&applet.keyCode==PApplet.CONTROL){
+//          a=applet.map(applet.noise(count+i*5),0,1,arcBegin[i], arcEnd[i]);
+//        }else{
           a=applet.random(arcBegin[i], arcEnd[i]);
-        }
+//        }
         float d=0;
         float tempX=lineX[i]+applet.cos(a)*d;
         float tempY=lineY[i]+applet.sin(a)*d;
@@ -714,11 +712,11 @@ public class gallifreyan {
       }
       else {
         int r;
-        if(applet.keyPressed&&applet.keyCode==PApplet.CONTROL){
-          r=0;
-        }else{
+//        if(applet.keyPressed&&applet.keyCode==PApplet.CONTROL){
+//          r=0;
+//        }else{
           r=applet.floor(applet.random(indexes.length));
-        }
+//        }
         int j=indexes[r];
         float a=angles[r]+PI;
         applet.line(lineX[i]+applet.cos(a)*lineRad[i]/2, lineY[i]+applet.sin(a)*lineRad[i]/2, lineX[j]+applet.cos(a+PI)*lineRad[j]/2, lineY[j]+applet.sin(a+PI)*lineRad[j]/2);
