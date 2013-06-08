@@ -40,8 +40,9 @@
       (.stroke fg)
       (.strokeWeight 1)
       (.noFill)
-;      (.frameRate 30)
-      (.noLoop))))
+      (.frameRate 15)
+      ;(.noLoop)
+      )))
 
 (defn -draw [^gallifreyan_translator.window this]
   (let [s (.state this)
@@ -52,10 +53,10 @@
          ^float c :count} @s
         ttext (gallifreyan/transliterate labeltext)]
     (.background this bg)
-    (gallifreyan/draw this ttext fg bg sr c)
+    (.image this (gallifreyan/draw this ttext fg bg sr c) 0 0)
     (.text this labeltext (float 15) (float 30))
     ; Add jitter for animated lines in the next frame
-    ;(dosync (alter s assoc :count (+ c (float 0.02))))
+    (dosync (alter s assoc :count (+ c (float 0.02))))
     ))
 
 (defn -keyPressed
@@ -94,7 +95,8 @@
           (= (int PApplet/BACKSPACE) keycode))
       (let [newe (if (empty? e) e (subs e 0 (dec (count e))))]
         (dosync (alter s assoc :text newe))
-        (.redraw this))
+        ;(.redraw this)
+        )
 
       (or (= (int PApplet/RETURN) keycode)
           (= (int PApplet/ENTER) keycode))
@@ -104,4 +106,5 @@
       (let [prefix (if (= defaultEnglish e) "" e)
             newe (str prefix newkey)]
         (dosync (alter s assoc :text newe))
-        (.redraw this))))))
+        ;(.redraw this)
+        )))))
